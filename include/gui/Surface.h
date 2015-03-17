@@ -287,9 +287,11 @@ private:
     // must be accessed from lock/unlock thread only
     Region mDirtyRegion;
 
+    // Acer a510
 #ifdef SURFACE_SKIP_FIRST_DEQUEUE
     bool                        mDequeuedOnce;
 #endif
+
 };
 
 }; // namespace android
