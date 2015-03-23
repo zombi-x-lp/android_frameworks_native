@@ -77,6 +77,11 @@ public:
     static status_t getDisplayInfo(const sp<IBinder>& display,
             DisplayInfo* info);
 
+    // Acer a510
+#ifdef ADD_LEGACY_SURFACE_COMPOSER_CLIENT_SYMBOLS
+    static status_t getDisplayInfo(int32_t displayId, DisplayInfo* info);
+#endif
+
     // Get the index of the current active configuration (relative to the list
     // returned by getDisplayInfo)
     static int getActiveConfig(const sp<IBinder>& display);
@@ -122,6 +127,11 @@ public:
 
     //! Close a composer transaction on all active SurfaceComposerClients.
     static void closeGlobalTransaction(bool synchronous = false);
+
+    // Acer a510
+#ifdef ADD_LEGACY_SURFACE_COMPOSER_CLIENT_SYMBOLS
+    static int setOrientation(int32_t dpy, int orientation, uint32_t flags);
+#endif
 
     //! Flag the currently open transaction as an animation transaction.
     static void setAnimationTransaction();
