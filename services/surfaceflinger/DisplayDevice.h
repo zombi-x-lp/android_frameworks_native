@@ -37,7 +37,7 @@ struct ANativeWindow;
 
 namespace android {
 
-class DisplayInfo;
+struct DisplayInfo;
 class DisplaySurface;
 class IGraphicBufferProducer;
 class Layer;
@@ -125,6 +125,10 @@ public:
     int32_t                 getDisplayType() const { return mType; }
     int32_t                 getHwcDisplayId() const { return mHwcDisplayId; }
     const wp<IBinder>&      getDisplayToken() const { return mDisplayToken; }
+
+    bool isPanelInverseMounted() const {
+        return mPanelInverseMounted;
+    }
 
     // We pass in mustRecompose so we can keep VirtualDisplaySurface's state
     // machine happy without actually queueing a buffer if nothing has changed
@@ -215,7 +219,7 @@ private:
     /*
      * Transaction state
      */
-    static status_t orientationToTransfrom(int orientation,
+    status_t orientationToTransfrom(int orientation,
             int w, int h, Transform* tr);
 
     uint32_t mLayerStack;
@@ -232,6 +236,8 @@ private:
     int mPowerMode;
     // Current active config
     int mActiveConfig;
+    // Panel is inverse mounted
+    int mPanelInverseMounted;
 };
 
 }; // namespace android

@@ -254,8 +254,12 @@ private:
     // called on the main thread in response to setPowerMode()
     void setPowerModeInternal(const sp<DisplayDevice>& hw, int mode);
 
-    void handleMessageTransaction();
-    void handleMessageInvalidate();
+    // Returns whether the transaction actually modified any state
+    bool handleMessageTransaction();
+
+    // Returns whether a new buffer has been latched (see handlePageFlip())
+    bool handleMessageInvalidate();
+
     void handleMessageRefresh();
 
     void handleTransaction(uint32_t transactionFlags);
@@ -276,10 +280,11 @@ private:
             sp<IGraphicBufferProducer> bqProducer,
             sp<IGraphicBufferConsumer> bqConsumer);
 
-    /* handlePageFilp: this is were we latch a new buffer
-     * if available and compute the dirty region.
+    /* handlePageFlip - latch a new buffer if available and compute the dirty
+     * region. Returns whether a new buffer has been latched, i.e., whether it
+     * is necessary to perform a refresh during this vsync.
      */
-    void handlePageFlip();
+    bool handlePageFlip();
 
     /* ------------------------------------------------------------------------
      * Transactions
@@ -357,7 +362,8 @@ private:
     void initializeDisplays();
 
     // Create an IBinder for a builtin display and add it to current state
-    void createBuiltinDisplayLocked(DisplayDevice::DisplayType type);
+    void createBuiltinDisplayLocked(DisplayDevice::DisplayType type,
+                                    bool secure);
 
     // NOTE: can only be called from the main thread or with mStateLock held
     sp<const DisplayDevice> getDisplayDevice(const wp<IBinder>& dpy) const {
