@@ -145,10 +145,10 @@ status_t SensorManager::assertStateLocked() const {
             DeathObserver(SensorManager& mgr) : mSensorManger(mgr) { }
         };
 
-        LOG_ALWAYS_FATAL_IF(mSensorServer.get() == NULL, "getService(SensorService) NULL");
-
+      if (mSensorServer != NULL) {
         mDeathObserver = new DeathObserver(*const_cast<SensorManager *>(this));
         IInterface::asBinder(mSensorServer)->linkToDeath(mDeathObserver);
+
 
         mSensors = mSensorServer->getSensorList(mOpPackageName);
         size_t count = mSensors.size();
@@ -159,6 +159,7 @@ status_t SensorManager::assertStateLocked() const {
         for (size_t i=0 ; i<count ; i++) {
             mSensorList[i] = mSensors.array() + i;
         }
+      }
     }
 
     return NO_ERROR;
@@ -203,6 +204,7 @@ Sensor const* SensorManager::getDefaultSensor(int type)
 
 sp<SensorEventQueue> SensorManager::createEventQueue(String8 packageName, int mode) {
     sp<SensorEventQueue> queue;
+    if(mSensorServer == NULL) return NULL;
 
     Mutex::Autolock _l(mLock);
     while (assertStateLocked() == NO_ERROR) {
