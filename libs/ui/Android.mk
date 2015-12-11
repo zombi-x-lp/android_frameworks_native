@@ -30,6 +30,11 @@ LOCAL_CPPFLAGS += -Wno-c++98-compat-pedantic
 # that they're non-portable as long as they're consistent within one execution
 LOCAL_CPPFLAGS += -Wno-four-char-constants
 
+# Needed now to complete the build
+ifeq ($(NO_GNU_ANONYMOUS_STRUCT),true)
+LOCAL_CPPFLAGS += -Wno-gnu-anonymous-struct
+endif
+
 # Don't warn about struct padding
 LOCAL_CPPFLAGS += -Wno-padded
 
